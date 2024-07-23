@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <!--四个信息卡-->
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2 mb-3">
+            <div class="col">
+                <div class="card border-0 shadow-sm   ">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="me-1">
+                                <h6 class="mb-2 bsa-ellipsis-1">数据总条数</h6>
+                                <h4 class="mb-1 bsa-ellipsis-1">{{ data_cnt }}</h4>
+                            </div>
+                            <i class="bi bi-currency-yen fs-1 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm   ">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="me-1">
+                                <h6 class="mb-2 bsa-ellipsis-1">手机信息数</h6>
+                                <h4 class="mb-1 bsa-ellipsis-1">{{ phone_cnt }}</h4>
+                            </div>
+                            <i class="bi bi-people fs-1 text-info"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm   ">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="me-1">
+                                <h6 class="mb-2 bsa-ellipsis-1">爬虫总数</h6>
+                                <h4 class="mb-1 bsa-ellipsis-1">{{ spider_cnt }}</h4>
+                            </div>
+                            <i class="bi bi-cart fs-1 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-0 shadow-sm   ">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="me-1">
+                                <h6 class="mb-2 bsa-ellipsis-1">日志总数</h6>
+                                <h4 class="mb-1 bsa-ellipsis-1">{{ log_cnt }}</h4>
+                            </div>
+                            <i class="bi bi-chat fs-1 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--开源信息-->
+        <div class="row mb-3">
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        手机信息采集与可视化
+                    </div>
+                    <div class="card-body " style="font-size: 1.25rem">
+                        <p>
+                            基于
+                            <span class="badge bg-primary">Django</span>
+                            <span class="badge bg-primary">Scrapy</span>
+                            <span class="badge bg-primary">Bootstrap</span>
+                            <span class="badge bg-primary">ECharts</span>
+                            <span class="badge bg-primary">MySQL</span>
+                            <span class="badge bg-primary">Redis</span>
+                            <span class="badge bg-primary">Minio</span>
+                            等技术开发的 手机信息采集与可视化系统
+                        </p>
+                        <p>开源地址：
+                            <a href="https://gitee.com/leo_3181538941/zol_phone" target="_blank"
+                               class="link-success text-decoration-none">https://gitee.com/leo_3181538941/zol_phone</a>
+                        </p>
+                        <div>
+                            实现:
+                            <ul>
+                                <li>爬虫管理</li>
+                                <li>手机排行信息可视化</li>
+                                <li>手机品牌信息可视化</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0">
+            <div class="card-header">
+                最后爬取的手机信息
+            </div>
+            <div class="card-body">
+                <!--row-cols-1 控制手机视图中有几列, row-cols-lg-4控制网页视图列数-->
+                <div class="row row-cols-1 row-cols-lg-4">
+                    {% for phone in last_phone_info %}
+                        <div class="col">
+                            <div class="card border-1 shadow-sm" style="height: 600px">
+                                <div class="card-header">
+                                    <p class="text-primary mb-1">手机名称:</p>
+                                    <h4> {{ phone.name }}</h4>
+                                    <span class="text-secondary mb-1">手机价格:</span>
+                                    <h5 class="price">
+                                        {{ phone.price }}
+                                    </h5>
+                                    <p class="text-secondary mb-1">更新时间: {{ phone.last_modify }}</p>
+                                    <a class="btn btn-outline-primary mt-3" href="{{ phone.url }}">查看详情</a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex flex-column align-items-center text-center">
+                                        <img src="{{ phone.img_url }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!--服务器信息-->
+        <div class="row">
+            <div class="col">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white">
+                        服务器信息
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>数据来源</td>
+                                    <td><a href="https://detail.zol.com.cn/">中关村在线</a></td>
+                                </tr>
+                                <tr>
+                                    <td>服务器IP地址</td>
+                                    <td>192.168.23.131</td>
+                                </tr>
+                                <tr>
+                                    <td>服务器域名</td>
+                                    <td>cent</td>
+                                </tr>
+                                <tr>
+                                    <td>minio服务器endpoint</td>
+                                    <td>http://cent:9090</td>
+                                </tr>
+                                <tr>
+                                    <td>python版本</td>
+                                    <td>3.10.11</td>
+                                </tr>
+                                <tr>
+                                    <td>Django版本</td>
+                                    <td>4.1</td>
+                                </tr>
+                                <tr>
+                                    <td>Scrapy</td>
+                                    <td>2.9.0</td>
+                                </tr>
+                                <tr>
+                                    <td>爬虫最大并发请求</td>
+                                    <td>16</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

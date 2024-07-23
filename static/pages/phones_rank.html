@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="icon" href="/static/dist/img/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/static/dist/img/favicon-16x16.png" sizes="16x16" type="image/png">
+    <meta name="keywords" content="响应式后台模板,开源免费后台模板,Bootstrap5后台管理系统模板">
+    <meta name="description" content="Bootstrap-Admin基于bootstrap5的免费开源的响应式后台管理模板">
+    <meta name="author" content="ajiho">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/dist/css/BSA.css">
+    <title>Bootstrap-Admin - 开源免费响应式后台管理系统模板</title>
+</head>
+<body class="bg-light pt-2">
+<div class="container-fluid" id="app">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="row row-cols-1 row-cols-lg-1 g-3">
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            手机评论数
+                        </div>
+                        <div class="card-body">
+                            <div id="echarts1" style="width: 100%;height:600px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            手机标价排行
+                        </div>
+                        <div class="card-body">
+                            <div id="echarts2" style="width: 100%;height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            手机评分排行
+                        </div>
+                        <div class="card-body">
+                            <div id="echarts3" style="width: 100%;height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-white">
+                            手机京东售价排行
+                        </div>
+                        <div class="card-body">
+                            <div id="echarts4" style="width: 100%;height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/dist/js/BSA.js"></script>
+<script src="/static/plugins/echarts/echarts.min.js"></script>
+<script src="/static/js/jquery-3.7.0.min.js"></script>
+<script>
+
+    let echarts1 = echarts.init(document.getElementById('echarts1'));
+    let echarts2 = echarts.init(document.getElementById('echarts2'));
+    let echarts3 = echarts.init(document.getElementById('echarts3'));
+    let echarts4 = echarts.init(document.getElementById('echarts4'));
+
+    echarts1.setOption({xAxis: {type: 'value',}, yAxis: {type: 'category',}, tooltip: {trigger: 'item'},});
+    echarts2.setOption({xAxis: {type: 'value',}, yAxis: {type: 'category',}, tooltip: {trigger: 'item'},});
+    echarts3.setOption({xAxis: {type: 'category',}, yAxis: {type: 'value',}, tooltip: {trigger: 'item'},});
+    echarts4.setOption({xAxis: {type: 'value',}, yAxis: {type: 'category',}, tooltip: {trigger: 'item'},});
+    $.ajax({
+        url: '/phones/echarts',
+        type: 'get',
+        dataType: 'json',
+        success: function (res) {
+            console.log(res);
+            if (res.code === 200) {
+                echarts1.setOption({
+                    color: '#4286f4',
+                    grid: {left: '20%',},
+                    yAxis: {
+                        data: res.cmt.xAxis,
+                        inverse: true,
+                    },
+                    series: [{
+                        name: '评论数',
+                        type: 'bar',
+                        data: res.cmt.series
+                    }]
+                });
+                echarts2.setOption({
+                    color: '#198754',
+                    tooltip: {trigger: 'item'},
+                    grid: {bottom: '30%',},
+                    xAxis: {
+                        type: 'category',
+                        data: res.price.xAxis,
+                        axisLabel: {interval: 0, rotate: -25},
+                    },
+                    yAxis: {inverse: true,},
+                    series: [
+                        {
+                            name: '价格',
+                            type: 'line',
+                            data: res.price.series
+                        }]
+                });
+                echarts3.setOption({
+                    color: '#ffc107',
+                    grid: {bottom: '30%',},
+                    xAxis: {
+                        data: res.score.xAxis,
+                        axisLabel: {interval: 0, rotate: -25},
+                    },
+                    yAxis: {
+                        max: 10,
+                        min: 9.6
+                    },
+                    series: [{
+                        name: '评分',
+                        type: 'bar',
+                        data: res.score.series
+                    }]
+                });
+                echarts4.setOption({
+                    color: '#dc3545',
+                    grid: {bottom: '45%',},
+                    tooltip: {trigger: 'item'},
+                    grid: {bottom: '30%',},
+                    xAxis: {
+                        type: 'category',
+                        data: res.jd_price.xAxis,
+                        axisLabel: {interval: 0, rotate: -25},
+                    },
+                    yAxis: {
+                        inverse: true,
+                    },
+                    series: [{
+                        name: '价格',
+                        type: 'line',
+                        data: res.jd_price.series
+                    }]
+                });
+            }
+        }
+    })
+
+
+    //这里是响应式处理
+    window.onresize = function () {
+        echarts1.resize();
+        echarts2.resize();
+        echarts3.resize();
+        echarts4.resize();
+    };
+
+
+</script>
+</body>
+</html>
